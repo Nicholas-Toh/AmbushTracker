@@ -1,5 +1,5 @@
 from os import environ
-from telethon import TelegramClient, events
+from telethon import TelegramClient, events, Button
 from telethon.tl.types import PeerUser
 from telethon.tl.functions.messages import SendMessageRequest
 from alchemysession import AlchemySessionContainer
@@ -65,12 +65,17 @@ async def getMonsterMessage(event):
             print("from Chat Wars")
             if "ambush" in event.message.message:
                 print("and has ambush")
-                await sendMonsterTarget(ambushChannelID, event.message)
+                markup = setJoinButton("Join Fight")
+                await sendMonsterTarget(ambushChannelID, event.message, markup)
 
-async def sendMonsterTarget(target, message):
-    await client.forward_messages(target, message)
+async def sendMonsterTarget(target, message, markup=None):
+    await client.forward_messages(target, message, button=markup)
     print ("Sending monster ambush message")
-    
+
+def setJoinButton(message):
+    markup = client.build_reply_markup(Button.inline(message))
+    return markup
+
 client.run_until_disconnected()
 
 
