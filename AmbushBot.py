@@ -57,10 +57,12 @@ async def validateJoin(event):
 fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
 async def getMonsterMessage(event):
-    print("Received Message")
+    print("Received message")
     fromChatID = event.message.forward.chat_id
     if fromChatID == cwBotID:
+        print("from Chat Wars")
         if "ambush" in event.message.message:
+            print("and has ambush")
             await sendMonsterTarget(ambushChannelID)
 
 async def sendMonsterTarget(target, message):
