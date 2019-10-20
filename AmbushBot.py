@@ -59,6 +59,7 @@ fightMessageRegex = re.compile("/fight_(\w+)")
 async def getMonsterMessage(event):
     print("Received message")
     fromChatID = event.message.forward.chat_id
+    print(fromChatID)
     if fromChatID == cwBotID:
         print("from Chat Wars")
         if "ambush" in event.message.message:
