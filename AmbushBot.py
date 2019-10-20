@@ -48,12 +48,20 @@ async def validateJoin(event):
         chatID = chat.id
         chatTitle = chat.title
         
-        print("Bot has been added to a new group by @" + userName + " (" + str(userID) + ") " + "to group named: " + chatTitle)
+        print("Bot has been added by @" + userName + " (" + str(userID) + ") " + "to a group named: " + chatTitle)
         
         if userID != admonid:
             await client.delete_dialog(chatID)
 
+fightMessageRegex = re.compile("/fight_(\w+)ambush(\w+)")
+@client.on(events.NewMessage(from_users = cwBotChat, pattern = fightMessageRegex))
+async def getMonsterMessage(event):
+    await sendMonsterTarget(ambushChannelID)
 
+async def sendMonsterTarget(target, message):
+    await client.forward_messages(target, message)
+    print ("Sending monster ambush message")
+    
 client.run_until_disconnected()
 
 
