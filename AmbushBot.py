@@ -54,7 +54,7 @@ async def validateJoin(event):
         if userID != admonid:
             await client.delete_dialog(chatID)
 
-fightMessageRegex = re.compile("/fight_(\w+)")
+fightMessageRegex = re.compile("(\w+)/fight_(\w+)")
 @client.on(events.NewMessage(pattern = fightMessageRegex))
 async def getMonsterMessage(event):
     print("Received message")
