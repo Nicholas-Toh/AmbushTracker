@@ -29,7 +29,7 @@ client = TelegramClient(
     session, int(environ['TG_API_ID']), environ['TG_API_HASH'])
 
 admonid = 323232619 
-ambushChannelID = "-1001193142189"
+ambushChannelID = -1001193142189
 website = "https://api.telegram.org/bot"+botToken
 cwBotChat = 'chtwrsbot'
 cwBotID = 408101137
