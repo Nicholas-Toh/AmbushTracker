@@ -54,10 +54,11 @@ async def validateJoin(event):
             await client.delete_dialog(chatID)
 
 ##fightMessageRegex = re.compile("/fight_(\w+)")
-@client.on(events.NewMessage(from_users = cwBotChat))
+@client.on(events.NewMessage(pattern = fightMessageRegex))
 async def getMonsterMessage(event):
-    if "ambush" in event.message.message:
-        await sendMonsterTarget(ambushChannelID)
+    if event.message.forward.username == cwBotChat:
+        if "ambush" in event.message.message:
+            await sendMonsterTarget(ambushChannelID)
 
 async def sendMonsterTarget(target, message):
     await client.forward_messages(target, message)
