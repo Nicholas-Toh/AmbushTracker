@@ -64,7 +64,7 @@ async def getMonsterMessage(event):
         print("from Chat Wars")
         if "ambush" in event.message.message:
             print("and has ambush")
-            await sendMonsterTarget(ambushChannelID, event.message.message)
+            await sendMonsterTarget(ambushChannelID, event.message)
 
 async def sendMonsterTarget(target, message):
     await client.forward_messages(target, message)
