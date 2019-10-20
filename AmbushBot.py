@@ -43,7 +43,7 @@ async def validateJoin(event):
         user = await event.get_added_by()
         userID = user.id
         
-        chat = event.get_chat()
+        chat = await event.get_chat()
         chatID = chat.id
         chatTitle = chat.title
         
