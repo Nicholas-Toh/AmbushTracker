@@ -47,7 +47,7 @@ async def validateJoin(event):
         chatID = chat.id
         chatTitle = chat.title
         
-        print("Bot has been added to a new group by " + userID + "to group named: " + chatTitle)
+        print("Bot has been added to a new group by " + str(userID) + "to group named: " + chatTitle)
         
         if user.id != admonid:
             await client.delete_dialog(chatID)
