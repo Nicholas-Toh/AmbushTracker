@@ -47,7 +47,7 @@ async def validateJoin(event):
             await client.delete_dialog(chatID)
 
 
-
+client.run_until_disconnected()
 
 
 
