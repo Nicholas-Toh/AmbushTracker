@@ -43,7 +43,7 @@ async def validateJoin(event):
         user = await event.get_added_by()
         userName = user.username
         userFirstName = user.first_name
-        userLastName = user.lastName
+        userLastName = user.last_name
         userFullName = userFirstName+" "+userLastName
         userID = user.id
         
