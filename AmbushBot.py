@@ -32,6 +32,7 @@ admonid = 323232619
 ambushChannelID = "-1001193142189"
 website = "https://api.telegram.org/bot"+botToken
 cwBotChat = 'chtwrsbot'
+cwBotID = 408101137
 semaphore = 1
 semaphore2 = 1
 
@@ -57,9 +58,8 @@ fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
 async def getMonsterMessage(event):
     print("Received Message")
-    fromChat = await event.message.forward.get_chat()
-    fromUserName = fromChat.id
-    if fromUserName == cwBotChat:
+    fromChatID = event.message.forward.chat_id
+    if fromChatID == cwBotID:
         if "ambush" in event.message.message:
             await sendMonsterTarget(ambushChannelID)
 
