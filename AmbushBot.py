@@ -55,7 +55,7 @@ async def validateJoin(event):
             await client.delete_dialog(chatID)
 
 fightMessageRegex = re.compile("/fight_(\w+)")
-@client.on(events.NewMessage)
+@client.on(events.NewMessage(pattern = fightMessageRegex))
 async def getMonsterMessage(event):
     print("Received message")
     if (event.message.fwd_from):
@@ -67,7 +67,7 @@ async def getMonsterMessage(event):
                 print("and has ambush")
                 markup = setJoinButton("Join Fight")
                 fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                await sendMonsterTarget(ambushChannelID, event.message.message, markup)
+                await sendMonsterTarget(ambushChannelID, fightMessage, markup)
 
 async def sendMonsterTarget(target, message, markup=None):
     await client.send_message(target, message, buttons=markup)
