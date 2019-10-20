@@ -67,7 +67,7 @@ async def getMonsterMessage(event):
             await sendMonsterTarget(ambushChannelID, event.message.message)
 
 async def sendMonsterTarget(target, message):
-    await client.forward_messages(target, message)
+    await client.send_message(target, message)
     print ("Sending monster ambush message")
     
 client.run_until_disconnected()
