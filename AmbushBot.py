@@ -16,7 +16,7 @@ import json
 import re
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.DEBUG)
+                    level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
 container = AlchemySessionContainer(environ['DATABASE_URL'])
@@ -90,8 +90,9 @@ async def updateJoinedPlayers(event):
         clickedUserLastName = ""
 
     clickedUserFullName = clickedUserFirstName + clickedUserLastName
+    markup = setJoinButton("Join Fight")
     fightMessage += ("\n" +clickedUserFullName)
-    await event.edit(fightMessage)
+    await event.edit(fightMessage, buttons = markup)
 
     
 client.run_until_disconnected()
