@@ -69,7 +69,7 @@ async def getMonsterMessage(event):
                 await sendMonsterTarget(ambushChannelID, event.message, markup)
 
 async def sendMonsterTarget(target, message, markup=None):
-    await client.forward_messages(target, message, button=markup)
+    await client.forward_messages(target, message, buttons=markup)
     print ("Sending monster ambush message")
 
 def setJoinButton(message):
