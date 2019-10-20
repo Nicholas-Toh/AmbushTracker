@@ -58,7 +58,7 @@ fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
 async def getMonsterMessage(event):
     print("Received message")
-    fromChatID = event.message.forward.chat_id
+    fromChatID = event.message.fwd_from.from_id
     print(fromChatID)
     if fromChatID == cwBotID:
         print("from Chat Wars")
