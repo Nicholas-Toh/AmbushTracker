@@ -54,7 +54,7 @@ async def validateJoin(event):
         if userID != admonid:
             await client.delete_dialog(chatID)
 
-fightMessageRegex = re.compile(r"\w+/fight_\w+")
+fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
 async def getMonsterMessage(event):
     print("Received message")
@@ -66,7 +66,7 @@ async def getMonsterMessage(event):
             if "ambush" in event.message.message:
                 print("and has ambush")
                 markup = setJoinButton("Join Fight")
-                fightMessage = event.message.message + "\n\nPlayers who have joined the fight: "
+                fightMessage = event.message.message + "\nPlayers who have joined the fight: "
                 await sendMonsterTarget(ambushChannelID, fightMessage, markup)
 
 async def sendMonsterTarget(target, message, markup=None):
@@ -77,22 +77,7 @@ def setJoinButton(message):
     markup = client.build_reply_markup(Button.inline(message))
     return markup
 
-@client.on(events.CallbackQuery(chats=ambushChannelID))
-async def updateJoinedPlayers(event):
-    fightMessage = event.get_message()
-    clickedUserFirstName = event.get_sender().first_name
-    if !clickedUserFirstName:
-        clickedUserFirstName = ""
 
-    clickedUserLastName = event.get_sender().last_name
-    if !clickedUserLastName:
-        clickedUserLastName = ""
-
-    clickedUserFullName = clickedUserFirstName + clickedUserLastName
-    fightMessage += ("\n" +clickedUserFullName)
-    event.edit(fightMessage)
-
-    
 client.run_until_disconnected()
 
 
