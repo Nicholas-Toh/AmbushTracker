@@ -15,16 +15,6 @@ import sys
 import json
 import re
 
-
-
-admonid = 323232619 
-ambushChannelID = "-1001193142189"
-botToken = "584961873:AAHfUZsieS6U4NcCBf2WlPU910ehXbbQWQM"
-website = "https://api.telegram.org/bot"+botToken
-cwBotChat = 'chtwrsbot'
-semaphore = 1
-semaphore2 = 1
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -37,6 +27,13 @@ session = container.new_session(session_name)
 botToken = environ['TG_BOT_TOKEN']
 client = TelegramClient(
     session, int(environ['TG_API_ID']), environ['TG_API_HASH'])
+
+admonid = 323232619 
+ambushChannelID = "-1001193142189"
+website = "https://api.telegram.org/bot"+botToken
+cwBotChat = 'chtwrsbot'
+semaphore = 1
+semaphore2 = 1
 
 client.start(bot_token = botToken)
 
