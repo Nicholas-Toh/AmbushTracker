@@ -57,7 +57,8 @@ fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
 async def getMonsterMessage(event):
     print("Received Message")
-    fromUserName = await event.message.forward.get_chat().username
+    fromChat = event.message.forward.get_chat()
+    fromUserName = await fromChat.get_chat()
     if fromUserName == cwBotChat:
         if "ambush" in event.message.message:
             await sendMonsterTarget(ambushChannelID)
