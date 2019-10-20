@@ -78,7 +78,19 @@ def setJoinButton(message):
 
 @client.on(events.CallbackQuery(chats=ambushChannelID))
 async def updateJoinedPlayers(event):
-   print("Hello")
+    fightMessage = await event.get_message()
+    clickedUser = await event.get_sender()
+    clickedUserFirstName = clickedUser.first_name
+    if not clickedUserFirstName:
+        clickedUserFirstName = ""
+
+    clickedUserLastName = clickedUser.last_name
+    if not clickedUserLastName:
+        clickedUserLastName = ""
+
+    clickedUserFullName = clickedUserFirstName + clickedUserLastName
+    fightMessage += ("\n" +clickedUserFullName)
+    await event.edit(fightMessage)
 
     
 client.run_until_disconnected()
