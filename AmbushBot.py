@@ -92,7 +92,7 @@ async def updateJoinedPlayers(event):
     clickedUserFullName = clickedUserFirstName + clickedUserLastName
     fightMessage += ("\n" +clickedUserFullName)
     markup = setJoinButton("Join Fight")
-    await event.edit(fightMessage)
+    await event.edit(fightMessage, buttons=markup)
 
     
 client.run_until_disconnected()
