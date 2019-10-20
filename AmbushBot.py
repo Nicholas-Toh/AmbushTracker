@@ -60,7 +60,6 @@ async def getMonsterMessage(event):
     print("Received message")
     if (event.message.fwd_from):
         fromChatID = event.message.fwd_from.from_id
-        print(fromChatID)
         if fromChatID == cwBotID:
             print("from Chat Wars")
             if "ambush" in event.message.message:
@@ -77,7 +76,22 @@ def setJoinButton(message):
     markup = client.build_reply_markup(Button.inline(message))
     return markup
 
+@client.on(events.CallbackQuery(chats=ambushChannelID))
+async def updateJoinedPlayers(event):
+    fightMessage = event.get_message()
+    clickedUserFirstName = event.get_sender().first_name
+    if !clickedUserFirstName:
+        clickedUserFirstName = ""
 
+    clickedUserLastName = event.get_sender().last_name
+    if !clickedUserLastName:
+        clickedUserLastName = ""
+
+    clickedUserFullName = clickedUserFirstName + clickedUserLastName
+    fightMessage += ("\n" +clickedUserFullName)
+    event.edit(fightMessage)
+
+    
 client.run_until_disconnected()
 
 
