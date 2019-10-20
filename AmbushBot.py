@@ -58,13 +58,14 @@ fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
 async def getMonsterMessage(event):
     print("Received message")
-    fromChatID = event.message.fwd_from.from_id
-    print(fromChatID)
-    if fromChatID == cwBotID:
-        print("from Chat Wars")
-        if "ambush" in event.message.message:
-            print("and has ambush")
-            await sendMonsterTarget(ambushChannelID, event.message)
+    if (event.message.fwd_from):
+        fromChatID = event.message.fwd_from.from_id
+        print(fromChatID)
+        if fromChatID == cwBotID:
+            print("from Chat Wars")
+            if "ambush" in event.message.message:
+                print("and has ambush")
+                await sendMonsterTarget(ambushChannelID, event.message)
 
 async def sendMonsterTarget(target, message):
     await client.forward_messages(target, message)
