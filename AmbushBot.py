@@ -42,16 +42,13 @@ async def validateJoin(event):
     if event.user_added:
         user = await event.get_added_by()
         userName = user.username
-        userFirstName = user.first_name
-        userLastName = user.last_name
-        userFullName = userFirstName+" "+userLastName
         userID = user.id
         
         chat = await event.get_chat()
         chatID = chat.id
         chatTitle = chat.title
         
-        print("Bot has been added to a new group by " + userFullName + " @" + userName + " (" + str(userID) + ") " + "to group named: " + chatTitle)
+        print("Bot has been added to a new group by @" + userName + " (" + str(userID) + ") " + "to group named: " + chatTitle)
         
         if userID != admonid:
             await client.delete_dialog(chatID)
