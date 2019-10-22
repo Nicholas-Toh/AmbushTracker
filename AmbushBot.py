@@ -35,7 +35,7 @@ controlCenterID = -1001456217101
 website = "https://api.telegram.org/bot"+botToken
 cwBotChat = 'chtwrsbot'
 cwBotID = 408101137
-semaphore = 1
+#semaphore = 1
 semaphore2 = 1
 
 client.start(bot_token = botToken)
