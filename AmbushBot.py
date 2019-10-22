@@ -238,6 +238,36 @@ async def updateJoinedPlayers(event):
     markup = setJoinButton("Join Fight")
     await event.edit(fightMessage, buttons=markup)
 
+@client.on(events.CallbackQuery(chats=testChannelID))
+async def updateJoinedPlayersTest(event):
+    originalMessage = await event.get_message()
+    fightMessage = originalMessage.message
+    clickedUser = await event.get_sender()
+    clickedUserFirstName = clickedUser.first_name
+    if not clickedUserFirstName:
+        clickedUserFirstName = ""
+
+    clickedUserLastName = clickedUser.last_name
+    if not clickedUserLastName:
+        clickedUserLastName = ""
+
+    clickedUserFullName = clickedUserFirstName + clickedUserLastName
+    fightMessage = ""
+    if ambushFightController.key_exists(clickedUser.id):
+        ambushFightController.delete_sender(clickedUser.id)
+    
+    else:
+        ambushFightController.add_sender(clickedUser.id, clickedUserFullName)
+        
+    for name in ambushFightController.get_name_list():
+        fightMessage += ("\n" + name)
+        
+    markup = setJoinButton("Join Fight")
+    await event.edit(fightMessage, buttons=markup)
+    
+        
+        
+
     
 client.run_until_disconnected()
 
