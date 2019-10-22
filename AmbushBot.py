@@ -130,7 +130,7 @@ class AmbushFightController:
         self.ambushes = {} ## date ---> ambush
 
     def add_ambush(self, dateID, message, messageDate):
-        if messageID not in self.ambushes.keys():
+        if dateID not in self.ambushes.keys():
             self.ambushes[dateID] = Ambush(message, messageDate)
             return True
         else:
@@ -189,7 +189,7 @@ async def getMonsterMessageTest(event):
             print("from Chat Wars")
             if "ambush" in event.message.message:
                 print("and has ambush")
-                if ambushFightController.add_ambush(event.message.fwd_from.date, event.message.message, event.message.date):
+                if ambushFightController.add_ambush(event.message.fwd_from.date, event.message.message, event.message.fwd_from.date):
                     markup = setJoinButton("Join Fight")
                     fightMessage = event.message.message + "\nPlayers who have joined the fight: "
                     await sendMessage(testChannelID, fightMessage, markup)
