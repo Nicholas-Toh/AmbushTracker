@@ -127,23 +127,23 @@ class AmbushFightController:
         self.capacity = capacity
         self.queueSize = queueSize
         #self.queue = Queue(self.queueSize, self.capacity)
-        self.ambushes = {}
+        self.ambushes = {} ## date ---> ambush
 
-    def add_ambush(self, messageID, message, messageDate):
+    def add_ambush(self, dateID, message, messageDate):
         if messageID not in self.ambushes.keys():
-            self.ambushes[messageID] = Ambush(message, messageDate)
+            self.ambushes[dateID] = Ambush(message, messageDate)
             return True
         else:
             return False
 
-    def delete_ambush(self, messageID):
+    def delete_ambush(self, dateID):
         try:
-            del self.ambushes[messageID]
+            del self.ambushes[dateID]
         except KeyError as error:
             raise RuntimeError("Failed to delete ambush") from error
 
-    def add_sender(self, messageID, userID, userName):
-        if not self.ambushes[messageID].add_sender(userID, userName):
+    def add_sender(self, dateID, userID, userName):
+        if not self.ambushes[dateID].add_sender(userID, userName):
             logger.error(f'Failed to add {userID} to ambush id {messageID} - ID already exists')
             return False
         else:
@@ -182,14 +182,14 @@ async def validateJoin(event):
 
 @client.on(events.NewMessage(chats=controlCenterID))
 async def getMonsterMessageTest(event):
-    print("Received message from control center with id %s", str(event.message.id))
+    print("Received message from control center")
     if (event.message.fwd_from):
         fromChatID = event.message.fwd_from.from_id
         if fromChatID == cwBotID:
             print("from Chat Wars")
             if "ambush" in event.message.message:
                 print("and has ambush")
-                if ambushFightController.add_ambush(event.message.id, event.message.message, event.message.date):
+                if ambushFightController.add_ambush(event.message.fwd_from.date, event.message.message, event.message.date):
                     markup = setJoinButton("Join Fight")
                     fightMessage = event.message.message + "\nPlayers who have joined the fight: "
                     await sendMessage(testChannelID, fightMessage, markup)
