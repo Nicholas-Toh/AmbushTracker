@@ -149,7 +149,6 @@ async def validateJoin(event):
 @client.on(events.NewMessage(chats=controlCenterID))
 async def getMonsterMessageTest(event):
     print("Received message from control center")
-    print("Received message")
     if (event.message.fwd_from):
         fromChatID = event.message.fwd_from.from_id
         if fromChatID == cwBotID:
@@ -159,7 +158,7 @@ async def getMonsterMessageTest(event):
                 ambushes[event.message.id] = {}
                 markup = setJoinButton("Join Fight")
                 fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                await sendMessage(ambushChannelID, fightMessage, markup)
+                await sendMessage(testChannelID, fightMessage, markup)
                 
     raise events.StopPropagation
     
@@ -175,7 +174,7 @@ async def getMonsterMessage(event):
                 print("and has ambush")
                 markup = setJoinButton("Join Fight")
                 fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                await sendMessage(testChannelID, fightMessage, markup)
+                await sendMessage(ambushChannelID, fightMessage, markup)
 
 async def sendMessage(target, message, markup=None):
     await client.send_message(target, message, buttons=markup)
