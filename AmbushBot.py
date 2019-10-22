@@ -128,6 +128,7 @@ class AmbushFightController:
         self.queueSize = queueSize
         #self.queue = Queue(self.queueSize, self.capacity)
         self.ambushes = {} ## date ---> ambush
+        self.messageDateIDMap = {} ## id ---> date
 
     def add_ambush(self, dateID, message, messageDate):
         if dateID not in self.ambushes.keys():
@@ -144,7 +145,7 @@ class AmbushFightController:
 
     def add_sender(self, dateID, userID, userName):
         if not self.ambushes[dateID].add_sender(userID, userName):
-            logger.error(f'Failed to add {userID} to ambush id {messageID} - ID already exists')
+            logger.error(f'Failed to add user with id ({userID}) to ambush id ({messageID}) - ID already exists')
             return False
         else:
             return True
@@ -159,7 +160,16 @@ class AmbushFightController:
         if key_exists(ambushID):
             return ambushes[ambushID]
         else:
-            logger.error(f'Failed to get ambush {ambushID}')
+            logger.error(f'Failed to get ambush ({ambushID})')
+
+    def map_message_date_id(self, messageID, dateID):
+        self.messageDateIDMap[messageID] = dateID
+
+    def get_ambushID(self, messageID):
+        if messageID in self.messageDateIDMap.keys():
+            return self.messageDateIDMap[messageID]
+        else:
+             logger.error(f'Failed to get ambushID using message ID ({messageID})')
 
 ambushFightController = AmbushFightController(900, 200)
 
@@ -192,7 +202,8 @@ async def getMonsterMessageTest(event):
                 if ambushFightController.add_ambush(event.message.fwd_from.date, event.message.message, event.message.fwd_from.date):
                     markup = setJoinButton("Join Fight")
                     fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                    await sendMessage(testChannelID, fightMessage, markup)
+                    result = await sendMessage(testChannelID, fightMessage, markup)
+                    ambushFightController.map_message_date_id(result.id, event.message.fwd_from.date)
                 else:
                     logger.info(f'Ambush {event.message.id} already exists')
                 
@@ -257,9 +268,8 @@ async def updateJoinedPlayersTest(event):
         ambushFightController.delete_sender(clickedUser.id)
     
     else:
-        print(originalMessage.date)
-        print(ambushFightController.ambushes.keys())
-        ambushFightController.add_sender(originalMessage.date, clickedUser.id, clickedUserFullName)
+        date = ambushFightController.get_ambushID(originalMessage.id)
+        ambushFightController.add_sender(date, clickedUser.id, clickedUserFullName)
         
     for name in ambushFightController.get_name_list():
         fightMessage += ("\n" + name)
