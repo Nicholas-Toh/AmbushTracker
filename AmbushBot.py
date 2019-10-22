@@ -257,6 +257,8 @@ async def updateJoinedPlayersTest(event):
         ambushFightController.delete_sender(clickedUser.id)
     
     else:
+        print(originalMessage.date)
+        print(ambushFightController.ambushes.keys())
         ambushFightController.add_sender(originalMessage.date, clickedUser.id, clickedUserFullName)
         
     for name in ambushFightController.get_name_list():
