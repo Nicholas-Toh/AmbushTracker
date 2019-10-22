@@ -182,7 +182,7 @@ async def validateJoin(event):
 
 @client.on(events.NewMessage(chats=controlCenterID))
 async def getMonsterMessageTest(event):
-    print("Received message from control center")
+    print("Received message from control center with id %s", str(event.message.id))
     if (event.message.fwd_from):
         fromChatID = event.message.fwd_from.from_id
         if fromChatID == cwBotID:
