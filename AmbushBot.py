@@ -144,22 +144,26 @@ async def validateJoin(event):
         if userID != admonid:
             await client.delete_dialog(chatID)
 
-
-##@client.on(events.NewMessage(chats=controlCenterID)
-##async def getMonsterMessageTest(event):
-##    print("Received message from control center")
-##    print("Received message")
-##    if (event.message.fwd_from):
-##        fromChatID = event.message.fwd_from.from_id
-##        if fromChatID == cwBotID:
-##            print("from Chat Wars")
-##            if "ambush" in event.message.message:
-##               print("and has ambush")
-##               
-##    raise events.StopPropagation
-##
-            
 ambushes = {}
+
+@client.on(events.NewMessage(chats=controlCenterID)
+async def getMonsterMessageTest(event):
+    print("Received message from control center")
+    print("Received message")
+    if (event.message.fwd_from):
+        fromChatID = event.message.fwd_from.from_id
+        if fromChatID == cwBotID:
+            print("from Chat Wars")
+            if "ambush" in event.message.message:
+                print("and has ambush")
+                ambushes[event.message.id] = {}
+                markup = setJoinButton("Join Fight")
+                fightMessage = event.message.message + "\nPlayers who have joined the fight: "
+                await sendMessage(testChannelID, fightMessage, markup)
+           
+    raise events.StopPropagation
+
+            
 
 fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
@@ -173,7 +177,7 @@ async def getMonsterMessage(event):
                 print("and has ambush")
                 markup = setJoinButton("Join Fight")
                 fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                ambushes[event.message.id] = {}
+                
                 await sendMessage(ambushChannelID, fightMessage, markup)
                 
 
