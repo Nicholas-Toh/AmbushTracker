@@ -129,7 +129,6 @@ client.start(bot_token = botToken)
 
 ambushes = {}
 
-ambushFightController = AmbushFightController(200, 500)
 @client.on(events.ChatAction)
 async def validateJoin(event):
     if event.user_added:
