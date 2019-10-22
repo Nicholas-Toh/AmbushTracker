@@ -76,58 +76,92 @@ client.start(bot_token = botToken)
 ##        self.numItems -= 1
 ##        return val
 ##
-##FIGHT_TIME = 3 ##Minutes
-##MAX_FIGHTERS = 4
-##class Ambush:
-##    def __init__(self, message, startTime):
-##        self.sender = {} ##Dictionary mapping id(int) to username(string)
-##        self.message = message
-##        self.fightTime = FIGHT_TIME
-##        self.endTime = startTime + datetime.timedelta(minutes=FIGHT_TIME)
-##        self.maxFighters = MAX_FIGHTERS
-##
-##    def check_ended(self):
-##        now = datetime.datetime.now()
-##        if now >= self.endTime:
-##            return True
-##        else:
-##            return False
-##
-##    def add_sender(self, userID, userFullName):
-##        if self.key_exists(userID):
-##            return False
-##        else:
-##            self.sender[userID] = userFullName
-##            return True
-##
-##    def key_exists(self, key):
-##        if key in self.sender.keys(): 
-##            return True
-##        else: 
-##            return False
-##            
-##    def get_user_full_name(self, userID):
-##        return self.sender[userID]
-##
-##    def get_name_list(self):
-##        keys = list(self.sender.keys())
-##        names = []
-##        for key in keys:
-##            names.append(self.sender[key])
-##
-##        return names
-##    
-##class AmbushFightController:
-##    def __init__(self, queueSize, capacity):
-##        self.capacity = capacity
-##        self.queueSize = queueSize
-##        self.queue = Queue(self.queueSize, self.capacity)
-##        self.ambushes = []
-##
-##    def add_ambush(event):
-##        self.ambushes.append(Ambush(event.message.message, event.message.date))
+FIGHT_TIME = 3 ##Minutes
+MAX_FIGHTERS = 4
+class Ambush:
+    def __init__(self, message, startTime):
+        self.sender = {} ##Dictionary mapping id(int) to username(string)
+        self.message = message
+        self.fightTime = FIGHT_TIME
+        self.endTime = startTime + datetime.timedelta(minutes=FIGHT_TIME)
+        self.maxFighters = MAX_FIGHTERS
 
-ambushes = {}
+    def check_ended(self):
+        now = datetime.datetime.now()
+        if now >= self.endTime:
+            return True
+        else:
+            return False
+
+    def add_sender(self, userID, userFullName):
+        if self.key_exists(userID):
+            logger.error(f'User ID ({userID}) already exists')
+            return False
+
+        elif len(self.sender) == MAX_FIGHTERS:
+            logger.error(f'Ambush participants already reached {MAX_FIGHTERS}')
+            return False
+        
+        else:
+            self.sender[userID] = userFullName
+
+    def key_exists(self, key):
+        if key in self.sender.keys():
+            return True
+        else: 
+            return False
+            
+    def get_user_full_name(self, userID):
+        return self.sender[userID]
+
+    def get_name_list(self):
+        keys = list(self.sender.keys())
+        names = []
+        for key in keys:
+            names.append(self.sender[key])
+
+        return names
+    
+class AmbushFightController:
+    def __init__(self, queueSize, capacity):
+        self.capacity = capacity
+        self.queueSize = queueSize
+        self.queue = Queue(self.queueSize, self.capacity)
+        self.ambushes = {}
+
+    def add_ambush(self, messageID, message, messageDate):
+        if key not in self.ambushes.keys():
+            self.ambushes[messageID] = Ambush(message, messageDate)
+            return True
+        else:
+            return False
+
+    def delete_ambush(self, messageID):
+        try:
+            del self.ambushes[messageID]
+        except KeyError as error:
+            raise RuntimeError("Failed to delete ambush") from error
+
+    def add_sender(self, messageID, userID, userName):
+        if not self.ambushes[messageID].add_sender(userID, userName):
+            logger.error(f'Failed to add {userID} to ambush id {messageID} - ID already exists')
+            return False
+        else:
+            return True
+
+    def key_exists(self, key):
+        if key in self.ambushes.keys():
+            return True
+        else: 
+            return False
+        
+    def get_ambush(self, ambushID):
+        if key_exists(ambushID):
+            return ambushes[ambushID]
+        else:
+            logger.error(f'Failed to get ambush {ambushID}')
+
+ambushFightController = AmbushFightController(900, 200)
 
 @client.on(events.ChatAction)
 async def validateJoin(event):
@@ -155,10 +189,12 @@ async def getMonsterMessageTest(event):
             print("from Chat Wars")
             if "ambush" in event.message.message:
                 print("and has ambush")
-                ambushes[event.message.id] = {}
-                markup = setJoinButton("Join Fight")
-                fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                await sendMessage(testChannelID, fightMessage, markup)
+                if ambushFightController.add_ambush(event.message.id, event.message.message, event.message.date):
+                    markup = setJoinButton("Join Fight")
+                    fightMessage = event.message.message + "\nPlayers who have joined the fight: "
+                    await sendMessage(testChannelID, fightMessage, markup)
+                else:
+                    logger.info(f'Ambush {event.message.id} already exists')
                 
     raise events.StopPropagation
     
