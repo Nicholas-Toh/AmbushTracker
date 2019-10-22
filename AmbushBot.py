@@ -79,9 +79,8 @@ client.start(bot_token = botToken)
 FIGHT_TIME = 3 ##Minutes
 MAX_FIGHTERS = 4
 class Ambush:
-    def __init__(self, messageID, message, startTime):
+    def __init__(self, message, startTime):
         self.sender = {} ##Dictionary mapping id(int) to username(string)
-        self.messageID = messageID
         self.message = message
         self.fightTime = FIGHT_TIME
         self.endTime = startTime + datetime.timedelta(minutes=FIGHT_TIME)
@@ -130,9 +129,9 @@ class AmbushFightController:
         #self.queue = Queue(self.queueSize, self.capacity)
         self.ambushes = {} ## date ---> ambush
 
-    def add_ambush(self, dateID, messageID, message, messageDate):
+    def add_ambush(self, dateID, message, messageDate):
         if dateID not in self.ambushes.keys():
-            self.ambushes[dateID] = Ambush(messageID, message, messageDate)
+            self.ambushes[dateID] = Ambush(message, messageDate)
             return True
         else:
             return False
@@ -190,7 +189,7 @@ async def getMonsterMessageTest(event):
             print("from Chat Wars")
             if "ambush" in event.message.message:
                 print("and has ambush")
-                if ambushFightController.add_ambush(event.message.fwd_from.date, event.message.id, event.message.message, event.message.fwd_from.date):
+                if ambushFightController.add_ambush(event.message.fwd_from.date, event.message.message, event.message.fwd_from.date):
                     markup = setJoinButton("Join Fight")
                     fightMessage = event.message.message + "\nPlayers who have joined the fight: "
                     await sendMessage(testChannelID, fightMessage, markup)
@@ -258,7 +257,7 @@ async def updateJoinedPlayersTest(event):
         ambushFightController.delete_sender(clickedUser.id)
     
     else:
-        ambushFightController.add_sender(clickedUser.id, clickedUserFullName)
+        ambushFightController.add_sender(originalMessage.date, clickedUser.id, clickedUserFullName)
         
     for name in ambushFightController.get_name_list():
         fightMessage += ("\n" + name)
