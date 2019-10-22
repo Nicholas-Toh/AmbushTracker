@@ -130,7 +130,7 @@ class AmbushFightController:
         self.ambushes = {}
 
     def add_ambush(self, messageID, message, messageDate):
-        if key not in self.ambushes.keys():
+        if messageID not in self.ambushes.keys():
             self.ambushes[messageID] = Ambush(message, messageDate)
             return True
         else:
