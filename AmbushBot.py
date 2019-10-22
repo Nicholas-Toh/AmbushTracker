@@ -210,7 +210,7 @@ async def getMonsterMessage(event):
                 print("and has ambush")
                 markup = setJoinButton("Join Fight")
                 fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                await sendMessage(ambushChannelID, fightMessage, markup)
+                await sendMessage(testChannelID, fightMessage, markup)
 
 async def sendMessage(target, message, markup=None):
     await client.send_message(target, message, buttons=markup)
