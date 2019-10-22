@@ -35,99 +35,99 @@ controlCenterID = -1001456217101
 website = "https://api.telegram.org/bot"+botToken
 cwBotChat = 'chtwrsbot'
 cwBotID = 408101137
-#semaphore = 1
+semaphore = 1
 semaphore2 = 1
 
 client.start(bot_token = botToken)
 
-##class Queue:
-##    def __init__(self, size, capacity):
-##        self.arr = [0 for i in range(capacity)]
-##        self.front = 0
-##        self.end = -1
-##        self.size = size
-##        self.numItems = 0
-##
-##    def extend(self, extension):
-##        if self.size + extension <= self.capacity:
-##            self.size += extension
-##        else:
-##            raise Exception("Size exceeded capacity of queue")
-##
-##    def reduce(self, reduction):
-##        if self.size - reduction >= 0:
-##            self.size -= reduction
-##        else:
-##            raise Exception("Size of queue cannot be reduced beyond 0")
-##        
-##    def enqueue(self, value):
-##        if self.numItems + 1 > self.size:
-##            raise Exception("Cannot enqueue: queue is full")
-##            
-##        self.end = (self.end + 1) % self.size
-##        self.arr[self.end] = value
-##        self.numItems += 1
-##
-##    def dequeue(self):
-##        if self.numItems <= 0:
-##            raise Exception("Cannot dequeue: queue is empty")
-##        val = self.arr[self.front]
-##        self.front = (self.front + 1) % self.size
-##        self.numItems -= 1
-##        return val
-##
-##FIGHT_TIME = 3 ##Minutes
-##MAX_FIGHTERS = 4
-##class Ambush:
-##    def __init__(self, message, startTime):
-##        self.sender = {} ##Dictionary mapping id(int) to username(string)
-##        self.message = message
-##        self.fightTime = FIGHT_TIME
-##        self.endTime = startTime + datetime.timedelta(minutes=FIGHT_TIME)
-##        self.maxFighters = MAX_FIGHTERS
-##
-##    def check_ended(self):
-##        now = datetime.datetime.now()
-##        if now >= self.endTime:
-##            return True
-##        else:
-##            return False
-##
-##    def add_sender(self, userID, userFullName):
-##        if self.key_exists(userID):
-##            return False
-##        else:
-##            self.sender[userID] = userFullName
-##            return True
-##
-##    def key_exists(self, key):
-##        if key in self.sender.keys(): 
-##            return True
-##        else: 
-##            return False
-##            
-##    def get_user_full_name(self, userID):
-##        return self.sender[userID]
-##
-##    def get_name_list(self):
-##        keys = list(self.sender.keys())
-##        names = []
-##        for key in keys:
-##            names.append(self.sender[key])
-##
-##        return names
-##    
-##class AmbushFightController:
-##    def __init__(self, queueSize, capacity):
-##        self.capacity = capacity
-##        self.queueSize = queueSize
-##        self.queue = Queue(self.queueSize, self.capacity)
-##        self.ambushes = []
-##
-##    def add_ambush(event):
-##        self.ambushes.append(Ambush(event.message.message, event.message.date))
+class Queue:
+    def __init__(self, size, capacity):
+        self.arr = [0 for i in range(capacity)]
+        self.front = 0
+        self.end = -1
+        self.size = size
+        self.numItems = 0
 
+    def extend(self, extension):
+        if self.size + extension <= self.capacity:
+            self.size += extension
+        else:
+            raise Exception("Size exceeded capacity of queue")
 
+    def reduce(self, reduction):
+        if self.size - reduction >= 0:
+            self.size -= reduction
+        else:
+            raise Exception("Size of queue cannot be reduced beyond 0")
+        
+    def enqueue(self, value):
+        if self.numItems + 1 > self.size:
+            raise Exception("Cannot enqueue: queue is full")
+            
+        self.end = (self.end + 1) % self.size
+        self.arr[self.end] = value
+        self.numItems += 1
+
+    def dequeue(self):
+        if self.numItems <= 0:
+            raise Exception("Cannot dequeue: queue is empty")
+        val = self.arr[self.front]
+        self.front = (self.front + 1) % self.size
+        self.numItems -= 1
+        return val
+
+FIGHT_TIME = 3 ##Minutes
+MAX_FIGHTERS = 4
+class Ambush:
+    def __init__(self, message, startTime):
+        self.sender = {} ##Dictionary mapping id(int) to username(string)
+        self.message = message
+        self.fightTime = FIGHT_TIME
+        self.endTime = startTime + datetime.timedelta(minutes=FIGHT_TIME)
+        self.maxFighters = MAX_FIGHTERS
+
+    def check_ended(self):
+        now = datetime.datetime.now()
+        if now >= self.endTime:
+            return True
+        else:
+            return False
+
+    def add_sender(self, userID, userFullName):
+        if self.key_exists(userID):
+            return False
+        else:
+            self.sender[userID] = userFullName
+            return True
+
+    def key_exists(self, key):
+        if key in self.sender.keys(): 
+            return True
+        else: 
+            return False
+            
+    def get_user_full_name(self, userID):
+        return self.sender[userID]
+
+    def get_name_list(self):
+        keys = list(self.sender.keys())
+        names = []
+        for key in keys:
+            names.append(self.sender[key])
+
+        return names
+    
+class AmbushFightController:
+    def __init__(self, queueSize, capacity):
+        self.capacity = capacity
+        self.queueSize = queueSize
+        self.queue = Queue(self.queueSize, self.capacity)
+        self.ambushes = []
+
+    def add_ambush(event):
+        self.ambushes.append(Ambush(event.message.message, event.message.date))
+
+ambushFightController = AmbushFightController(200, 500)
 @client.on(events.ChatAction)
 async def validateJoin(event):
     if event.user_added:
@@ -144,7 +144,6 @@ async def validateJoin(event):
         if userID != admonid:
             await client.delete_dialog(chatID)
 
-ambushes = {}
 
 @client.on(events.NewMessage(chats=controlCenterID)
 async def getMonsterMessageTest(event):
@@ -155,16 +154,10 @@ async def getMonsterMessageTest(event):
         if fromChatID == cwBotID:
             print("from Chat Wars")
             if "ambush" in event.message.message:
-                print("and has ambush")
-                ambushes[event.message.id] = {}
-                markup = setJoinButton("Join Fight")
-                fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                await sendMessage(testChannelID, fightMessage, markup)
-           
+               print("and has ambush")
+               
     raise events.StopPropagation
-
-            
-
+    
 fightMessageRegex = re.compile("/fight_(\w+)")
 @client.on(events.NewMessage)
 async def getMonsterMessage(event):
@@ -177,9 +170,7 @@ async def getMonsterMessage(event):
                 print("and has ambush")
                 markup = setJoinButton("Join Fight")
                 fightMessage = event.message.message + "\nPlayers who have joined the fight: "
-                
                 await sendMessage(ambushChannelID, fightMessage, markup)
-                
 
 async def sendMessage(target, message, markup=None):
     await client.send_message(target, message, buttons=markup)
