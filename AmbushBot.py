@@ -126,7 +126,7 @@ class AmbushFightController:
     def __init__(self, queueSize, capacity):
         self.capacity = capacity
         self.queueSize = queueSize
-        self.queue = Queue(self.queueSize, self.capacity)
+        #self.queue = Queue(self.queueSize, self.capacity)
         self.ambushes = {}
 
     def add_ambush(self, messageID, message, messageDate):
