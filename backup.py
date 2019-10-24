@@ -231,8 +231,10 @@ async def getMonsterMessageTest(event):
                     fightMessage = message + "\nPlayers who have joined the fight: "
                     result = await sendMessage(testChannelID, fightMessage, markup)
                     ambushFightController.map_message_date_id(result.id, date)
-                    print(date)
-                    await asyncio.sleep(5)##(ambushFightController.get_ambush(event.message.fwd_from.date).endTime.total_seconds())
+                    print(event.message.date)
+                    await asyncio.sleep(10)##(ambushFightController.get_ambush(event.message.fwd_from.date).endTime.total_seconds())
+                    print("ended")
+                    print(datetime.datetime.now())
                     ambush = ambushFightController.get_ambush(date)
                     ambush.ended = True
                     fightMessage = ambush.message+ "\nPlayers who have joined the fight: "
