@@ -215,9 +215,9 @@ async def validateJoin(event):
             await client.delete_dialog(chatID)
 
 
-@client.on(events.NewMessage)
-async def getMonsterMessage(event):
-    print("Received message")
+@client.on(events.NewMessage(chats=controlCenterID))
+async def getMonsterMessageTest(event):
+    print("Received message from control center")
     if (event.message.fwd_from):
         fromChatID = event.message.fwd_from.from_id
         if fromChatID == cwBotID:
@@ -238,7 +238,7 @@ async def getMonsterMessage(event):
                     fightMessage = ambush.message+ "\nPlayers who have joined the fight: "
                     for name in ambush.get_name_list():
                         fightMessage += ("\n" + name)
-                    await editMessage(ambushChannelID, result.id, fightMessage+"\n\nFight is over!")
+                    await editMessage(testChannelID, result.id, fightMessage+"\n\nFight is over!")
                     ##ambushFightController.delete_ambush(date)
                     
                 else:
@@ -276,6 +276,24 @@ def setJoinButton(message):
 
 @client.on(events.CallbackQuery(chats=ambushChannelID))
 async def updateJoinedPlayers(event):
+    originalMessage = await event.get_message()
+    fightMessage = originalMessage.message
+    clickedUser = await event.get_sender()
+    clickedUserFirstName = clickedUser.first_name
+    if not clickedUserFirstName:
+        clickedUserFirstName = ""
+
+    clickedUserLastName = clickedUser.last_name
+    if not clickedUserLastName:
+        clickedUserLastName = ""
+
+    clickedUserFullName = clickedUserFirstName + clickedUserLastName
+    fightMessage += ("\n" +clickedUserFullName)
+    markup = setJoinButton("Join Fight")
+    await event.edit(fightMessage, buttons=markup)
+
+@client.on(events.CallbackQuery(chats=testChannelID))
+async def updateJoinedPlayersTest(event):
     logger.warning("Received button click")
     originalMessage = await event.get_message()
     clickedUser = await event.get_sender()
