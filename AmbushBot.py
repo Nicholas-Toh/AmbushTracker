@@ -229,10 +229,15 @@ async def getMonsterMessage(event):
                 if ambushFightController.add_ambush(date, message, date):
                     markup = setJoinButton("Join Fight")
                     fightMessage = message + "\nPlayers who have joined the fight: "
+
                     result = await sendMessage(ambushChannelID, fightMessage, markup)
+
                     ambushFightController.map_message_date_id(result.id, date)
                     print(date)
-                    await asyncio.sleep(ambushFightController.get_ambush(event.message.fwd_from.date).endTime.total_seconds())
+                    
+                    now = event.message.date
+                    
+                    await asyncio.sleep((ambushFightController.get_ambush(date).endTime-now).total_seconds())
                     ambush = ambushFightController.get_ambush(date)
                     print(f'Fight at {ambush.endTime} ended')
                     ambush.ended = True
@@ -302,9 +307,7 @@ async def updateJoinedPlayers(event):
 
     for name in ambush.get_name_list():
         fightMessage += ("\n" + name)
-
-    unawareNow = datetime.datetime.now()
-    now = unawareNow.replace(tzinfo=datetime.timezone.utc)
+        
     markup = None
     if not ambush.ended:
         markup = setJoinButton("Join Fight")
