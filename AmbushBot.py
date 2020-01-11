@@ -19,11 +19,11 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = "postgres://tbbroxtdelfajj:eebf2d292a5f658ed69236d4ce92fa6dc7662dfa99be1d93de1433f73676acbe@ec2-174-129-33-88.compute-1.amazonaws.com:5432/d15vsoqch1tvfj"
-TG_API_HASH =  "1577a05e1a07f7dd4ec5b015ee971588"
-TG_API_ID= 215012
-TG_BOT_TOKEN = "584961873:AAHfUZsieS6U4NcCBf2WlPU910ehXbbQWQM"
-TG_SESSION = "ambushBot"
+DATABASE_URL = "DATABASE_URL"
+TG_API_HASH =  "TG_API_HASH"
+TG_API_ID= "TG_API_ID"
+TG_BOT_TOKEN = "TG_BOT_TOKEN"
+TG_SESSION = "TG_SESSION"
 
 container = AlchemySessionContainer(DATABASE_URL)
 session_name = TG_SESSION
@@ -34,10 +34,9 @@ botToken = TG_BOT_TOKEN
 client = TelegramClient(
     session, int(TG_API_ID), TG_API_HASH)
 
-admonid = 323232619 
-ambushChannelID = -1001193142189
-testChannelID = -1001278139694
-controlCenterID = -1001456217101
+admonid = ADMONID 
+ambushChannelID = AMBUSHCHANNELID
+controlCenterID = CONTROLCENTERID
 website = "https://api.telegram.org/bot"+botToken
 cwBotChat = 'chtwrsbot'
 cwBotID = 408101137
@@ -46,42 +45,7 @@ semaphore2 = 1
 
 client.start(bot_token = botToken)
 
-##class Queue:
-##    def __init__(self, size, capacity):
-##        self.arr = [0 for i in range(capacity)]
-##        self.front = 0
-##        self.end = -1
-##        self.size = size
-##        self.numItems = 0
-##
-##    def extend(self, extension):
-##        if self.size + extension <= self.capacity:
-##            self.size += extension
-##        else:
-##            raise Exception("Size exceeded capacity of queue")
-##
-##    def reduce(self, reduction):
-##        if self.size - reduction >= 0:
-##            self.size -= reduction
-##        else:
-##            raise Exception("Size of queue cannot be reduced beyond 0")
-##        
-##    def enqueue(self, value):
-##        if self.numItems + 1 > self.size:
-##            raise Exception("Cannot enqueue: queue is full")
-##            
-##        self.end = (self.end + 1) % self.size
-##        self.arr[self.end] = value
-##        self.numItems += 1
-##
-##    def dequeue(self):
-##        if self.numItems <= 0:
-##            raise Exception("Cannot dequeue: queue is empty")
-##        val = self.arr[self.front]
-##        self.front = (self.front + 1) % self.size
-##        self.numItems -= 1
-##        return val
-##
+
 FIGHT_TIME = 3 ##Minutes
 MAX_FIGHTERS = 4
 class Ambush:
